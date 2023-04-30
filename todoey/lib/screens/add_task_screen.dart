@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+class AddTaskScreen extends StatelessWidget {
+  final Function addTaskCallback;
 
-  @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
-}
-
-class _AddTaskScreenState extends State<AddTaskScreen> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  const AddTaskScreen({super.key, required this.addTaskCallback});
 
   @override
   Widget build(BuildContext context) {
+    late String newTaskTitle;
     return Container(
       color: const Color(0xff747474),
       child: Container(
@@ -46,12 +30,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
             ),
             TextField(
-              controller: _controller,
               autofocus: true,
               textAlign: TextAlign.center,
+              onChanged: (text) => newTaskTitle = text,
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                addTaskCallback(newTaskTitle);
+              },
               style: const ButtonStyle(
                 backgroundColor:
                     MaterialStatePropertyAll<Color>(Colors.blueGrey),
