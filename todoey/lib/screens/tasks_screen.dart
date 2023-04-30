@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/tasks_list.dart';
+import 'add_task_screen.dart';
+
 class TasksScreen extends StatelessWidget {
   const TasksScreen({super.key});
 
@@ -8,7 +11,11 @@ class TasksScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blueGrey.shade800,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          //When clicking we want to insert a Tasks tile
+          showModalBottomSheet(
+              context: context, builder: (context) => AddTaskScreen());
+        },
         backgroundColor: Colors.blueGrey.shade700,
         child: const Icon(Icons.add),
       ),
@@ -47,13 +54,15 @@ class TasksScreen extends StatelessWidget {
           ),
           Expanded(
             child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: const BoxDecoration(
-                color: Colors.white70,
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
               ),
+              child: const TasksList(),
             ),
           )
         ],
