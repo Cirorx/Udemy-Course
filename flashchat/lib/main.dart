@@ -4,7 +4,10 @@ import 'package:flashchat/screens/registration_screen.dart';
 import 'package:flashchat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const FlashChat());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const FlashChat());
+}
 
 class FlashChat extends StatelessWidget {
   const FlashChat({super.key});
