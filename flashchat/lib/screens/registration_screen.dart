@@ -19,7 +19,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blueGrey[400],
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -67,10 +67,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               title: "Register",
               color: Colors.blueAccent,
               onPressed: () async {
-                final newUser;
                 try {
                   //Implement registration functionality.
-                  newUser = await _auth.createUserWithEmailAndPassword(
+                  await _auth.createUserWithEmailAndPassword(
                     email: email,
                     password: password,
                   );

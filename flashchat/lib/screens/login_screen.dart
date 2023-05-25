@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashchat/components/roundedbutton.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  late String email, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
+                email = value;
               },
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter your email"),
@@ -49,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
+                password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                   hintText: "Enter your password"),
@@ -59,8 +66,19 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundedButton(
               color: Colors.lightBlueAccent,
               title: "Log in",
-              onPressed: () {
+              onPressed: () async {
                 //Implement login functionality.
+
+                try {
+                  //Implement registration functionality.
+                  await _auth.signInWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                } catch (e) {
+                  print(e.toString());
+                }
+                Navigator.pushNamed(context, ChatScreen.id);
               },
             ),
           ],
