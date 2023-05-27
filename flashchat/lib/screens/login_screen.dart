@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashchat/components/roundedbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../constants.dart';
 import 'chat_screen.dart';
@@ -27,11 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Hero(
-              tag: "logo",
-              child: SizedBox(
-                height: 200.0,
-                child: Image.asset('images/logo.png'),
+            Flexible(
+              child: Hero(
+                tag: "logo",
+                child: SizedBox(
+                  height: 200.0,
+                  child: Image.asset('images/logo.png'),
+                ),
               ),
             ),
             const SizedBox(
@@ -40,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextField(
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black),
               onChanged: (value) {
                 //Do something with the user input.
                 email = value;
@@ -53,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextField(
               keyboardType: TextInputType.visiblePassword,
               textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black),
               onChanged: (value) {
                 //Do something with the user input.
                 password = value;
@@ -67,10 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.lightBlueAccent,
               title: "Log in",
               onPressed: () async {
-                //Implement login functionality.
-
+                await EasyLoading.show(status: 'Loggin in...');
                 try {
-                  //Implement registration functionality.
                   await _auth.signInWithEmailAndPassword(
                     email: email,
                     password: password,
@@ -79,6 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   print(e.toString());
                 }
                 Navigator.pushNamed(context, ChatScreen.id);
+                await EasyLoading.dismiss();
               },
             ),
           ],

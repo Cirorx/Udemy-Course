@@ -3,10 +3,14 @@ import 'package:flashchat/screens/login_screen.dart';
 import 'package:flashchat/screens/registration_screen.dart';
 import 'package:flashchat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'components/easy_loading.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const FlashChat());
+  configLoading();
 }
 
 class FlashChat extends StatelessWidget {
@@ -26,6 +30,7 @@ class FlashChat extends StatelessWidget {
         LoginScreen.id: (context) => const LoginScreen(),
         ChatScreen.id: (context) => const ChatScreen()
       },
+      builder: EasyLoading.init(),
       home: const WelcomeScreen(),
     );
   }

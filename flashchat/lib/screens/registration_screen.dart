@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashchat/components/roundedbutton.dart';
 import 'package:flashchat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../constants.dart';
 
@@ -26,11 +27,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Hero(
-              tag: "logo",
-              child: SizedBox(
-                height: 200.0,
-                child: Image.asset('images/logo.png'),
+            Flexible(
+              child: Hero(
+                tag: "logo",
+                child: SizedBox(
+                  height: 200.0,
+                  child: Image.asset('images/logo.png'),
+                ),
               ),
             ),
             const SizedBox(
@@ -67,16 +70,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               title: "Register",
               color: Colors.blueAccent,
               onPressed: () async {
+                await EasyLoading.show(status: 'Registering...');
                 try {
                   //Implement registration functionality.
                   await _auth.createUserWithEmailAndPassword(
                     email: email,
                     password: password,
                   );
+                  await EasyLoading.showSuccess('Success!');
                 } catch (e) {
                   print(e.toString());
                 }
                 Navigator.pushNamed(context, ChatScreen.id);
+                await EasyLoading.dismiss();
               },
             ),
           ],
