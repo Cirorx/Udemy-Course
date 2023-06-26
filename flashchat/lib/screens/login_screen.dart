@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashchat/components/roundedbutton.dart';
+import 'package:flashchat/services/auth/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -15,8 +15,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = FirebaseAuth.instance;
   late String email, password;
+  final AuthService service = AuthService.firebase();
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.lightBlueAccent,
               title: "Log in",
               onPressed: () async {
-                await EasyLoading.show(status: 'Loggin in...');
-                try {
-                  await _auth.signInWithEmailAndPassword(
-                    email: email,
-                    password: password,
-                  );
-                } catch (e) {
-                  print(e.toString());
-                }
+                EasyLoading.show(status: 'Loggin in...');
+                await service.logIn(
+                  email: email,
+                  password: password,
+                );
                 Navigator.pushNamed(context, ChatScreen.id);
                 await EasyLoading.dismiss();
               },

@@ -1,5 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+/*FIREBASE
+
+*/
+final _fireStore = FirebaseFirestore.instance;
+
+final usersCollection = _fireStore.collection('users');
+
+/*DECORATIONS
+
+
+
+ */
 const kSendButtonTextStyle = TextStyle(
   color: Colors.black87,
   fontWeight: FontWeight.bold,

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import '../components/messages_stream.dart';
 import '../constants.dart';
+import '../services/auth/user.dart';
+import '../services/auth/cloud_firestore.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -14,22 +16,23 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
-  late User loggedInUser;
+
+  final FireBaseCloudStorage _fireBaseCloudStorage = FireBaseCloudStorage();
+  late User loggedInUser = _fireBaseCloudStorage.getCurrentUser();
   late String messageText;
 
   final messageController = TextEditingController();
   @override
   void initState() {
+    initializeUser();
     super.initState();
-    getCurrentUser();
   }
 
-  void getCurrentUser() async {
-    final user = await _auth.currentUser;
-    if (user != null) {
-      loggedInUser = user;
-    }
+  Future<void> initializeUser() async {
+    await _fireBaseCloudStorage.setUser();
+    setState(() {
+      loggedInUser = _fireBaseCloudStorage.getCurrentUser();
+    });
   }
 
   @override
@@ -43,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: const Icon(Icons.close),
               onPressed: () {
                 //Implement logout functionality
-                _auth.signOut();
+                //service.logOut();
                 Navigator.pop(context);
               }),
         ],
@@ -74,10 +77,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   TextButton(
                     onPressed: () {
                       messageController.clear();
-                      //Implement send functionality.
+                      // Get the current time
+                      final currentTime = DateTime.now();
+
                       _firestore.collection("messages").add({
-                        "sender": loggedInUser.email,
+                        "mail": loggedInUser.email,
                         "text": messageText,
+                        "username": loggedInUser.username,
+                        "date": currentTime,
                       });
                     },
                     child: const Text(

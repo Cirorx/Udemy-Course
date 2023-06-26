@@ -1,10 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flashchat/screens/login_screen.dart';
 import 'package:flashchat/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../components/roundedbutton.dart';
 import '../firebase_options.dart';
 

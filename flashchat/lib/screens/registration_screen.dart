@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashchat/components/roundedbutton.dart';
 import 'package:flashchat/screens/chat_screen.dart';
+import 'package:flashchat/services/auth/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -15,8 +15,25 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  String email = "", password = "";
-  final _auth = FirebaseAuth.instance;
+  late final TextEditingController _email, _userName, _password;
+  final AuthService service = AuthService.firebase();
+
+  @override
+  void initState() {
+    _userName = TextEditingController();
+    _email = TextEditingController();
+    _password = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _userName.dispose();
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,12 +57,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 48.0,
             ),
             TextField(
+              autofocus: true,
+              keyboardType: TextInputType.name,
+              textAlign: TextAlign.center,
+              controller: _userName,
+              decoration: kTextFieldDecoration.copyWith(
+                  hintText: "Enter your user name"),
+            ),
+            const SizedBox(
+              height: 8.0,
+            ),
+            TextField(
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-                email = value;
-              },
+              autocorrect: false,
+              controller: _email,
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter your email"),
             ),
@@ -53,12 +79,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
-              keyboardType: TextInputType.visiblePassword,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-                password = value;
-              },
+              controller: _password,
               decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your password',
               ),
@@ -73,9 +98,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 await EasyLoading.show(status: 'Registering...');
                 try {
                   //Implement registration functionality.
-                  await _auth.createUserWithEmailAndPassword(
-                    email: email,
-                    password: password,
+                  await service.createUser(
+                    email: _email.text,
+                    userName: _userName.text,
+                    password: _password.text,
                   );
                   await EasyLoading.showSuccess('Success!');
                 } catch (e) {

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import '../services/auth/user.dart';
 import 'message_bubble.dart';
 
 class MessageStream extends StatelessWidget {
@@ -27,14 +27,17 @@ class MessageStream extends StatelessWidget {
           List<MessageBubble> messageBubbles = [];
           for (var element in snapshot.data!.docs.reversed) {
             final message = element.get("text");
-            final messageSender = element.get("sender");
+            final messageSenderEmail = element.get("mail");
+            final userName = element.get("username");
+            final date = element.get("date").toString();
 
-            final currentUser = user.email;
+            final currentUserEmail = user.email;
 
             final messageBubble = MessageBubble(
-              sender: messageSender,
+              senderName: userName,
               text: message,
-              userIsSender: currentUser == messageSender,
+              userIsSender: currentUserEmail == messageSenderEmail,
+              date: date,
             );
             messageBubbles.add(messageBubble);
           }

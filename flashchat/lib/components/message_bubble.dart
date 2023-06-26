@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  final String sender, text;
+  final String senderName, text;
   final bool userIsSender;
+  final String date;
   const MessageBubble({
     super.key,
-    required this.sender,
+    required this.senderName,
     required this.text,
     required this.userIsSender,
+    required this.date,
   });
 
   @override
@@ -19,7 +21,7 @@ class MessageBubble extends StatelessWidget {
             userIsSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
-            sender,
+            senderName,
             style: const TextStyle(
               fontSize: 12,
               color: Colors.black54,
@@ -39,16 +41,26 @@ class MessageBubble extends StatelessWidget {
             elevation: 7,
             color: userIsSender ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 20,
-              ),
-              child: Text(
-                text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15.0,
-                ),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 15.0,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    date,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontSize: 10.0,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
