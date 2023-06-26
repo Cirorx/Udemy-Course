@@ -15,8 +15,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late String email, password;
+  late TextEditingController email, password;
   final AuthService service = AuthService.firebase();
+
+  @override
+  void initState() {
+    email = TextEditingController();
+    password = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.black),
-              onChanged: (value) {
-                //Do something with the user input.
-                email = value;
-              },
+              controller: email,
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter your email"),
             ),
@@ -58,10 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.visiblePassword,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.black),
-              onChanged: (value) {
-                //Do something with the user input.
-                password = value;
-              },
+              controller: password,
               decoration: kTextFieldDecoration.copyWith(
                   hintText: "Enter your password"),
             ),
@@ -74,8 +82,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () async {
                 EasyLoading.show(status: 'Loggin in...');
                 await service.logIn(
-                  email: email,
-                  password: password,
+                  email: email.text,
+                  password: password.text,
                 );
                 Navigator.pushNamed(context, ChatScreen.id);
                 await EasyLoading.dismiss();

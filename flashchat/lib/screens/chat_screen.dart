@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import '../components/messages_stream.dart';
 import '../constants.dart';
+import '../services/auth/service.dart';
 import '../services/auth/user.dart';
 import '../services/auth/cloud_firestore.dart';
 
@@ -15,17 +14,23 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _firestore = FirebaseFirestore.instance;
-
+  final AuthService service = AuthService.firebase();
   final FireBaseCloudStorage _fireBaseCloudStorage = FireBaseCloudStorage();
-  late User loggedInUser = _fireBaseCloudStorage.getCurrentUser();
-  late String messageText;
 
-  final messageController = TextEditingController();
+  late User loggedInUser = _fireBaseCloudStorage.getCurrentUser();
+  late TextEditingController messageController;
+
   @override
   void initState() {
     initializeUser();
+    messageController = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    super.dispose();
   }
 
   Future<void> initializeUser() async {
@@ -44,9 +49,8 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.close),
-              onPressed: () {
-                //Implement logout functionality
-                //service.logOut();
+              onPressed: () async {
+                service.logOut();
                 Navigator.pop(context);
               }),
         ],
@@ -58,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            MessageStream(firestore: _firestore, user: loggedInUser),
+            MessageStream(user: loggedInUser),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -67,25 +71,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       controller: messageController,
-                      onChanged: (value) {
-                        messageText = value;
-                      },
                       style: const TextStyle(color: Colors.black),
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
+                      _fireBaseCloudStorage.addMessage(messageController.text);
                       messageController.clear();
-                      // Get the current time
-                      final currentTime = DateTime.now();
-
-                      _firestore.collection("messages").add({
-                        "mail": loggedInUser.email,
-                        "text": messageText,
-                        "username": loggedInUser.username,
-                        "date": currentTime,
-                      });
                     },
                     child: const Text(
                       'Send',

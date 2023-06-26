@@ -1,23 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import '../services/auth/cloud_firestore.dart';
 import '../services/auth/user.dart';
 import 'message_bubble.dart';
 
 class MessageStream extends StatelessWidget {
-  const MessageStream({
+  MessageStream({
     super.key,
-    required this.firestore,
     required this.user,
   });
 
   final User user;
-  final FirebaseFirestore firestore;
 
+  final FireBaseCloudStorage _fireBaseCloudStorage = FireBaseCloudStorage();
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: firestore.collection("messages").snapshots(),
+      stream: _fireBaseCloudStorage
+          .getMessages()
+          .orderBy("date", descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const CircularProgressIndicator(
@@ -25,7 +28,7 @@ class MessageStream extends StatelessWidget {
           );
         } else {
           List<MessageBubble> messageBubbles = [];
-          for (var element in snapshot.data!.docs.reversed) {
+          for (var element in snapshot.data!.docs) {
             final message = element.get("text");
             final messageSenderEmail = element.get("mail");
             final userName = element.get("username");
