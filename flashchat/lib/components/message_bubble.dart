@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  final String senderName, text;
+  final String senderName, text, date;
   final bool userIsSender;
-  final String date;
+
   const MessageBubble({
     super.key,
     required this.senderName,

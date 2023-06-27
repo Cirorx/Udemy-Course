@@ -4,23 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flashchat/services/auth/user.dart' as flashchat;
 
+import 'cloud_message.dart';
+
 class FireBaseCloudStorage {
   FireBaseCloudStorage._sharedInstance();
   static final FireBaseCloudStorage _shared =
       FireBaseCloudStorage._sharedInstance();
   factory FireBaseCloudStorage() => _shared;
 
-  static final _firestore = FirebaseFirestore.instance;
-
-  final users = _firestore.collection("users");
-  final messages = _firestore.collection("messages");
+  final users = FirebaseFirestore.instance.collection("users");
+  final messages = FirebaseFirestore.instance.collection("messages");
 
   late flashchat.User currentUser =
       flashchat.User.fromFirebase(FirebaseAuth.instance.currentUser!);
-
-  getFirestore() {
-    return _firestore;
-  }
 
   getMessages() {
     return messages;
@@ -35,12 +31,32 @@ class FireBaseCloudStorage {
     });
   }
 
-  String getDate() {
-    DateTime now = DateTime.now();
-    String formattedDate =
-        "${now.hour}:${now.minute} - ${now.day}/${now.month}/${now.year}";
+  Stream<List<Message>> getMessagesStream() {
+    return messages.orderBy('date', descending: true).snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => _getMessageFromDocument(doc)).toList());
+  }
 
-    return formattedDate;
+  Message _getMessageFromDocument(
+      QueryDocumentSnapshot<Map<String, dynamic>> document) {
+    final messageText = document.get('text');
+    final messageUserEmail = document.get('mail');
+    final messageUser = document.get('username');
+    final messageTime = (document.get('date') as Timestamp).toDate();
+    final date =
+        '${messageTime.hour}:${messageTime.minute} - ${messageTime.day}/${messageTime.month}/${messageTime.year}';
+
+    return Message(
+      text: messageText,
+      userIsSender: messageUserEmail == currentUser.email,
+      senderName: messageUser,
+      date: date,
+    );
+  }
+
+  DateTime getDate() {
+    DateTime now = DateTime.now();
+    return now;
   }
 
   flashchat.User getCurrentUser() {

@@ -1,8 +1,6 @@
 //login
 class UserNotFoundAuthException implements Exception {}
 
-class WrongPasswordAuthException implements Exception {}
-
 //register
 class EmailAlreadyInUseAuthException implements Exception {}
 

@@ -7,16 +7,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 
-import 'cloud_firestore.dart';
+import '../cloud/cloud_firestore.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<void> initialize() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
+    cloudStorage = FireBaseCloudStorage();
   }
 
-  final FireBaseCloudStorage cloudStorage = FireBaseCloudStorage();
+  late FireBaseCloudStorage cloudStorage;
 
   @override
   Future<User> createUser({
@@ -64,7 +65,12 @@ class FirebaseAuthProvider implements AuthProvider {
 
   @override
   User? get currentUser {
-    return User.fromFirebase(FirebaseAuth.instance.currentUser!);
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return User.fromFirebase(user);
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -86,8 +92,6 @@ class FirebaseAuthProvider implements AuthProvider {
     } on FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
         throw UserNotFoundAuthException();
-      } else if (error.code == 'wrong-password') {
-        throw WrongPasswordAuthException();
       } else {
         throw GenericAuthException();
       }

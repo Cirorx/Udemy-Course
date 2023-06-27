@@ -14,6 +14,6 @@ void configLoading() {
     ..dismissOnTap = true;
 }
 
-void showLoading() {
-  EasyLoading.show(status: "Loading", dismissOnTap: true);
+void showLoading(String text) {
+  EasyLoading.show(status: text, dismissOnTap: false);
 }
