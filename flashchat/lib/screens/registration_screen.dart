@@ -5,6 +5,7 @@ import 'package:flashchat/services/auth/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../components/password_textfield.dart';
 import '../constants.dart';
 import '../services/auth/auth_exceptions.dart';
 import '../services/auth/bloc/auth_bloc.dart';
@@ -96,15 +97,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               const SizedBox(
                 height: 8.0,
               ),
-              TextField(
-                obscureText: true,
-                enableSuggestions: false,
-                autocorrect: false,
-                textAlign: TextAlign.center,
+              PasswordTextField(
                 controller: _password,
-                decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your password',
-                ),
+                hintText: "Enter your password",
               ),
               const SizedBox(
                 height: 24.0,

@@ -22,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
       }
     });
+
     on<AuthEventRegister>(
       (event, emit) async {
         final username = event.username;
@@ -44,7 +45,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             ),
           );
         } on Exception catch (e) {
-          throw Exception(e);
+          emit(
+            AuthStateRegistering(
+              exception: e,
+            ),
+          );
         }
 
         await EasyLoading.dismiss();

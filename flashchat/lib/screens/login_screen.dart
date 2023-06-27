@@ -21,20 +21,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late TextEditingController email, password;
+  late TextEditingController _email, _password;
   final AuthService service = AuthService.firebase();
 
   @override
   void initState() {
-    email = TextEditingController();
-    password = TextEditingController();
+    _email = TextEditingController();
+    _password = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    email.dispose();
-    password.dispose();
+    _email.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -42,8 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
-        if (state is AuthStateLoggedOut) {
-          if (state is UserNotFoundAuthException) {
+        if (state is AuthStateLogginIn) {
+          if (state.exception is UserNotFoundAuthException) {
             await showErrorDialog(
               context,
               "Cannot find a user with the entered credentials",
@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.black),
-                controller: email,
+                controller: _email,
                 decoration:
                     kTextFieldDecoration.copyWith(hintText: "Enter your email"),
               ),
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8.0,
               ),
               PasswordTextField(
-                controller: password,
+                controller: _password,
                 hintText: "Enter your password",
               ),
               const SizedBox(
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.lightBlueAccent,
                 title: "Log in",
                 onPressed: () async {
-                  if (email.text.isEmpty || password.text.isEmpty) {
+                  if (_email.text.isEmpty || _password.text.isEmpty) {
                     showMissingFieldsDialog(
                       context,
                       "Please fill in all the fields.",
@@ -103,8 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else {
                     context.read<AuthBloc>().add(
                           AuthEventLogIn(
-                            email.text,
-                            password.text,
+                            _email.text,
+                            _password.text,
                           ),
                         );
                   }
