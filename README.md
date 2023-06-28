@@ -1,7 +1,12 @@
 
 # FlashChat
-
+## Project Structure
+![example](https://github.com/Cirorx/Udemy-Course/assets/80367726/88397525-a53f-473d-8d7b-5d1158ee0958)
 ## Demo
+
+
+https://github.com/Cirorx/Udemy-Course/assets/80367726/d279537e-51af-4508-a44a-1c4be8393fcd
+
 
 ## Captures
 ![Screenshot_1687905544](https://github.com/Cirorx/Udemy-Course/assets/80367726/37775381-4f2e-445b-b8e0-e359e2df9694)
@@ -10,5 +15,4 @@
 
 
 
-## Project Structure
-![example](https://github.com/Cirorx/Udemy-Course/assets/80367726/88397525-a53f-473d-8d7b-5d1158ee0958)
+
